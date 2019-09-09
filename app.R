@@ -11,7 +11,7 @@ library(readxl)
 # setwd("C:\\Users\\Win7\\Documents\\samuel\\R\\Pruebas\\Shiny\\ver1-0")
 
 estaciones <- read_xlsx("bundle/estaciones.xlsx")%>%
-    mutate(files = paste0(region, "_", estacion, ".csv"))
+    mutate(files = paste0("bundle/", region, "_", estacion, ".csv"))
 
 files <- estaciones$files
 
@@ -30,7 +30,7 @@ ui <- fluidPage(title = "Shiny app",
                         
                         h5("Esta sección permite crear un gráfico de dispersión, de una variable a seleccionar, a través del tiempo.", 
                            style="text-align:justified"),
-                        h5("Se pueden especificar también las regiones, el periodo de tiempo a graficar y elegir el título del gráfico.", 
+                        h5("Se pueden especificar también las regiones, el periodo de tiempo a graficar (entre el 3 de noviembre de 1928 y el 31 de octubre del 2015) y elegir el título del gráfico.", 
                            style="text-align:justified"),
                         h5("Elige los datos que necesitas y presiona el botón Graficar.", 
                            style="text-align:justified"),
@@ -48,11 +48,11 @@ ui <- fluidPage(title = "Shiny app",
                         selectInput(inputId = "z",
                                     label = "Región",
                                     choices = sort(unique(estaciones$region)),
-                                    multiple = TRUE),
+                                    multiple = TRUE, selected = "Lima"),
                         
                         #Select datarange
                         dateRangeInput("date", strong("Rango de fechas"), 
-                                       start = "1928-11-03", end = "2015-10-31",
+                                       start = "1999-01-01", end = "2001-12-31",
                                        min = "1928-11-03", max = "2015-10-31",
                                        startview = "decade",
                                        separator = "hasta"),
@@ -60,7 +60,8 @@ ui <- fluidPage(title = "Shiny app",
                         # Enter text for plot title
                         textInput(inputId = "plot_title", 
                                   label = "Título del gráfico", 
-                                  placeholder = "Introduce texto para el título", value = ""),
+                                  placeholder = "Introduce texto para el título", 
+                                  value = ""),
                         
                         #Botón para actualizar datos
                         wellPanel(
