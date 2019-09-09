@@ -1,11 +1,8 @@
+library(tidyverse)
 library(shiny)
-library(readr)
-library(dplyr)
-library(ggplot2)
 library(shinythemes)
 library(DT)
 library(writexl)
-library(tidyr)
 library(readxl)
 
 # setwd("C:\\Users\\Win7\\Documents\\samuel\\R\\Pruebas\\Shiny\\ver1-0")
@@ -170,20 +167,13 @@ server <- function(input, output) {
         {
             req(input$z)
             
-            indice <- estaciones %>%
-                dplyr::filter(region %in% input$z)
-            
-            data <- read_csv(file = indice$files[1], col_types = "Dcccd")
-            if(length(indice$files) == 1){
-                data <- data
-            } else {
-            for (i in 2:length(indice$files)) {
-                data <- bind_rows(data, read_csv(file = indice$files[i], col_types = "Dcccd"))
-                                            }
-                }
-            data %>%
-                dplyr::filter(variable %in% input$y, fecha >= input$date[1] & fecha <= input$date[2])
-            
+            data <- estaciones %>%
+                dplyr::filter(region %in% input$z) %>%
+                map(.$files, read_csv, col_types = "Dcccd") %>%
+                tibble() %>%
+                unnest() %>%
+                dplyr::filter(variable %in% input$y, 
+                              fecha >= input$date[1] & fecha <= input$date[2])
         })
     
     plot_title <- eventReactive(
@@ -233,7 +223,9 @@ server <- function(input, output) {
                       col_names = TRUE, 
                       na = "")
         } else if(filetype == "xlsx"){
-            write_xlsx(x = data, path = file, format_headers = FALSE)
+            write_xlsx(x = data, 
+                       path = file, 
+                       format_headers = FALSE)
         }
     }
     
