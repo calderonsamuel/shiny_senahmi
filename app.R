@@ -10,8 +10,6 @@ library(readxl)
 estaciones <- read_xlsx("bundle/estaciones.xlsx")%>%
     mutate(files = paste0("bundle/", region, "_", estacion, ".csv"))
 
-# files <- estaciones$files
-
 ui <- fluidPage(title = "Shiny app",
                 
                 theme = shinytheme("sandstone"),
