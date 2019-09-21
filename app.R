@@ -187,7 +187,7 @@ server <- function(input, output) {
             labs(x = "Fecha",
                  y = "Valor",
                  title = plot_title(),
-                 color = "Región",
+                 color = "Variable",
                  caption = "Elaboración propia con base en datos del Senahmi") +
             theme(plot.title = element_text(face = 'bold', hjust = 0.5),
                   plot.caption = element_text(hjust = 0))
